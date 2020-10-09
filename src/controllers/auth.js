@@ -1,6 +1,9 @@
 const userModel = require("../database/models/user");
 const asyncErrorWrapper = require("express-async-handler");
 
+//Helpers
+const sendJwtToClient = require("../helpers/auth/sendJwtToClient");
+
 const registerUserController = asyncErrorWrapper(async (req, res, next) => {
     //Getting post data
     const { username, password, email } = {
@@ -15,11 +18,8 @@ const registerUserController = asyncErrorWrapper(async (req, res, next) => {
         password,
         email,
     });
-    await newUser.save();
-    res.status(200).json({
-        success: true,
-        data: newUser,
-    });
+    const savedUser = await newUser.save();
+    sendJwtToClient(savedUser, res);
 });
 
 module.exports = { registerUserController };

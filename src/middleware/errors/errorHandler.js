@@ -6,6 +6,11 @@ const customErrorHandler = (err, req, res, next) => {
         dataSum = err.message
         status = 400;
     }
+    if(err.code == 11000){
+        //Duplicate Key
+        dataSum = "Daha önce kullanılmış bir değere rastlandı."
+        status = 400;
+    }
 
     res.status(status || 500).json({
         status: false,
