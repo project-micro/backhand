@@ -22,4 +22,9 @@ const registerUserController = asyncErrorWrapper(async (req, res, next) => {
     sendJwtToClient(savedUser, res);
 });
 
-module.exports = { registerUserController };
+const test = async (req, res, next) => {
+    res.send({
+        test: req.headers,
+    });
+};
+module.exports = { registerUserController, test };
