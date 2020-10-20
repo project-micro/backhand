@@ -35,8 +35,8 @@ const userSchema = new Schema({
 userSchema.pre("save", function (next) {
     bcrypt.hash(this.password, 10, (err, hash) => {
         this.password = hash;
+        next();
     });
-    next();
 });
 
 userSchema.methods.genereateJwtToken = function () {

@@ -1,21 +1,21 @@
 const jwt = require("jsonwebtoken");
+const {
+    isThereToken,
+    getTokenFromHeader,
+} = require("../../helpers/tokenHelper/tokenHelper");
 const { JWT_SECRET } = process.env;
-const isTokenVerified = async (req, res, next) => {
-    if (!req.headers.authorization) {
-        res.send("Herhangi bir token bulunamadı.");
-    } else {
-        const cleanToken = req.headers.authorization;
-        let rawToken = "";
-        if (cleanToken.startsWith("Bearer")) {
-            rawToken = cleanToken.split(" ")[1];
-        }
-        jwt.verify(rawToken, JWT_SECRET, (err, decoded) => {
-            if (err) {
-                next(err);
-            }
-            next();
-        });
+
+const getAccessToRoute = async (req, res, next) => {
+    if (!isThereToken(req)) {
+        return next("You are not authorized to this route");
     }
+    const rawToken = getTokenFromHeader(req);
+    jwt.verify(rawToken, JWT_SECRET, (err, decoded) => {
+        if (err) {
+            next(err);
+        }
+        next();
+    });
 };
 
-module.exports = isTokenVerified;
+module.exports = getAccessToRoute;

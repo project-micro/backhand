@@ -2,7 +2,7 @@ const userModel = require("../database/models/user");
 const asyncErrorWrapper = require("express-async-handler");
 
 //Helpers
-const sendJwtToClient = require("../helpers/auth/sendJwtToClient");
+const {sendJwtToClient} = require("../helpers/tokenHelper/tokenHelper");
 
 const registerUserController = asyncErrorWrapper(async (req, res, next) => {
     //Getting post data
@@ -18,6 +18,7 @@ const registerUserController = asyncErrorWrapper(async (req, res, next) => {
         password,
         email,
     });
+    
     const savedUser = await newUser.save();
     sendJwtToClient(savedUser, res);
 });
@@ -27,4 +28,6 @@ const test = async (req, res, next) => {
         test: req.headers,
     });
 };
-module.exports = { registerUserController, test };
+
+
+module.exports = { registerUserController, test,  };
